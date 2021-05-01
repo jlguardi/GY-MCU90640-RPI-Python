@@ -23,7 +23,9 @@ def get_temp_array(d):
 
 # function to convert temperatures to pixels on image
 def td_to_image(f):
-    norm = np.uint8((f/100 - Tmin)*255/(Tmax-Tmin))
+    norm = (f - f.min())/(f.max()-f.min())*255
+    norm = np.clip(norm, 0, 255)
+    norm = np.uint8(norm)
     norm.shape = (24,32)
     return norm
 
@@ -67,8 +69,9 @@ try:
         ta_img = td_to_image(temp_array)
         
         # Image processing
+        ta_img = cv2.blur(ta_img,(2,2))
         img = cv2.applyColorMap(ta_img, cv2.COLORMAP_JET)
-        img = cv2.resize(img, (320,240), interpolation = cv2.INTER_CUBIC)
+        img = cv2.resize(img, (640,480), interpolation = cv2.INTER_CUBIC)
         img = cv2.flip(img, 1)
         
         text = 'Tmin = {:+.1f} Tmax = {:+.1f} FPS = {:.2f}'.format(temp_array.min()/100, temp_array.max()/100, 1/(time.time() - t0))
