@@ -84,6 +84,8 @@ try:
             fname = 'pic_' + dt.datetime.now().strftime('%Y-%m-%d_%H-%M-%S') + '.jpg'
             cv2.imwrite(fname, img)
             print('Saving image ', fname)
+        elif key == ord("q"):
+            raise(KeyboardInterrupt())
         
         t0 = time.time()
 
